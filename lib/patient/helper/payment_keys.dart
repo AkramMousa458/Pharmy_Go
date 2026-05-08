@@ -1,0 +1,5 @@
+class PaymentKeys {
+  static String apiKey =
+      'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RZeU16a3lMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuVkNaV0tTUzRlc28xVERlbTRVeDBnUEVldTFhTjNfc3pkaHVERlpJQUFTTVJxNEdGeDYtQW1HUzVMOVVnRmNkSG5uS1lPTGtONFhHZ2JFY3VSU28xTGc=';
+  static String cardPaymentMethodIntegrationID = '4524072';
+}
