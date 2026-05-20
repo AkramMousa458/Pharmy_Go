@@ -18,7 +18,7 @@ class WelcomeDoctorView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 110, bottom: 45),
               child: Image.asset(
-                AssetData.welcomeDoctor,
+                Assets.welcomeDoctor,
                 fit: BoxFit.contain,
                 height: Dimensions.screenHeight(context) - 300,
                 width: Dimensions.screenWidth(context),

@@ -70,7 +70,7 @@ class _CodeVerificationViewState extends State<CodeVerificationView> {
             Padding(
               padding: const EdgeInsets.only(top: 40),
               child: Image.asset(
-                AssetData.codeVerification,
+                Assets.codeVerification,
                 fit: BoxFit.contain,
                 height: 220,
                 width: Dimensions.screenWidth(context),
@@ -140,10 +140,13 @@ class _CodeVerificationViewState extends State<CodeVerificationView> {
                       text: 'Done',
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, LoginView.routeName, (route) => false,);
+                          context,
+                          LoginView.routeName,
+                          (route) => false,
+                        );
                       },
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: 100.h,
                     ),
                     _showResendText
@@ -155,9 +158,9 @@ class _CodeVerificationViewState extends State<CodeVerificationView> {
                                     color: ThemeColors.kGreyColor(context)),
                               ),
                               TextButton(
-                                onPressed: (){
+                                onPressed: () {
                                   Navigator.pushReplacementNamed(
-                            context, ForgetPasswordView.routeName);
+                                      context, ForgetPasswordView.routeName);
                                 },
                                 child: Text(
                                   "Re-send",

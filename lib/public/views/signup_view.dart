@@ -42,7 +42,7 @@ class SignupView extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      AssetData.logoIcon,
+                      Assets.logoIcon,
                       fit: BoxFit.contain,
                       height: 100.h,
                       width: 100.w,
@@ -205,7 +205,8 @@ class SignupView extends StatelessWidget {
                                             ? 'ID Card Uploaded Successfully'
                                             : 'Attach Syndicate ID Card',
                                         onChanged: (value) {},
-                                        iconSuffix: FaIcon(fileIcon, size: 22.sp),
+                                        iconSuffix:
+                                            FaIcon(fileIcon, size: 22.sp),
                                         isEnabled: false,
                                         validator: (value) {
                                           if (context

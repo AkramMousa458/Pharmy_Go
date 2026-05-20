@@ -44,7 +44,7 @@ class LoginView extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    AssetData.logoIcon,
+                    Assets.logoIcon,
                     fit: BoxFit.contain,
                     height: 120.0,
                     width: 120.0,

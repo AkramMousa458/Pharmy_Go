@@ -56,7 +56,7 @@ class _StartViewState extends State<StartView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // const SizedBox(height: 50),
-            Image.asset(AssetData.logo),
+            Image.asset(Assets.logo),
             // ElevatedButton(
             //   style: ElevatedButton.styleFrom(
             //     shadowColor: Colors.black,

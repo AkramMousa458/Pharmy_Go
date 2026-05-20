@@ -46,7 +46,7 @@ class DoctorProfilePage extends StatelessWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const PharmacyPicture(picture: AssetData.pharmacyPhoto)
+                  const PharmacyPicture(picture: Assets.pharmacyPhoto)
                   // Container(
                   //   decoration: const BoxDecoration(color: Color(0xFF0B3490)),
                   //   height: 230,

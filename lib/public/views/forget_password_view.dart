@@ -38,7 +38,7 @@ class ForgetPasswordView extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           children: [
             Image.asset(
-              AssetData.forgetPassword,
+              Assets.forgetPassword,
               fit: BoxFit.contain,
               height: 420,
               width: Dimensions.screenWidth(context),

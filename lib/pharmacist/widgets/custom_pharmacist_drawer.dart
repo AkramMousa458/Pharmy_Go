@@ -34,7 +34,7 @@ class CustomPharmacistDrawer extends StatelessWidget {
                         height: 150,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(AssetData.pharmacyPhoto),
+                            image: AssetImage(Assets.pharmacyPhoto),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.only(

@@ -22,7 +22,7 @@ class CustomDone extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 175, bottom: 50),
               child: Image.asset(
-                AssetData.done,
+                Assets.done,
                 fit: BoxFit.contain,
                 height: 219,
                 width: 219,

@@ -25,7 +25,7 @@ class ProfilePicture extends StatelessWidget {
             showImageViewer(
                 context,
                 picture.isEmpty && file == null
-                    ? const AssetImage(AssetData.profile)
+                    ? const AssetImage(Assets.profile)
                     : file != null
                         ? FileImage(file!) as ImageProvider
                         : NetworkImage(baseUrlForImage + picture.substring(0)),
@@ -34,7 +34,7 @@ class ProfilePicture extends StatelessWidget {
           child: CircleAvatar(
             radius: radius ?? Dimensions.screenWidth(context) / 4.8,
             backgroundImage: picture.isEmpty && file == null
-                ? const AssetImage(AssetData.profile)
+                ? const AssetImage(Assets.profile)
                 : file != null
                     ? FileImage(file!) as ImageProvider
                     : NetworkImage(baseUrlForImage + picture),

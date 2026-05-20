@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
+import 'package:pharmygo/core/utils/assets.dart';
 
 class CustomSlider extends StatefulWidget {
   const CustomSlider({super.key});
@@ -14,10 +15,11 @@ class CustomSlider extends StatefulWidget {
 
 class _CustomSliderState extends State<CustomSlider> {
   int _current = 0;
-  final List _images = [
-    ["Avoid smoking", "assets/adv1.png"],
-    ["Wash your hands\nfrequently", "assets/adv2.png"],
-    ["Move your body\ndaily", "assets/adv3.png"],
+  final List<String> _images = [
+    Assets.slider1,
+    Assets.slider2,
+    Assets.slider3,
+    Assets.slider4,
   ];
 
   @override
@@ -33,37 +35,8 @@ class _CustomSliderState extends State<CustomSlider> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 color: ThemeColors.kMainColor(context),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(height: 6.h),
-                      Text(
-                        image[0],
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        style: TextStyle(
-                          color: ThemeColors.kSecondButtonColor(context),
-                          fontSize: 20.sp,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Expanded(
-                        child: Image.asset(
-                          image[1],
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                    ],
-                  ),
-                ),
+                image: DecorationImage(
+                    image: AssetImage(image), fit: BoxFit.cover),
               ),
             );
           }).toList(),
@@ -78,22 +51,25 @@ class _CustomSliderState extends State<CustomSlider> {
             },
           ),
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 5.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: _images.map((image) {
             int index = _images.indexOf(image);
             return Container(
-              width: 8.0,
-              height: 8.0,
+              width: 7.0,
+              height: 7.0,
               margin: const EdgeInsets.symmetric(horizontal: 2.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _current == index ? Colors.blueAccent : Colors.grey,
+                color: _current == index
+                    ? Colors.blueAccent
+                    : Colors.blueGrey.withValues(alpha: .3),
               ),
             );
           }).toList(),
         ),
+        SizedBox(height: 3.h),
       ],
     );
   }

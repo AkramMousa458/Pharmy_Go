@@ -25,7 +25,7 @@ class StartView2 extends StatelessWidget {
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 70, right: 70),
-                  child: Image.asset(AssetData.smartphoneDr),
+                  child: Image.asset(Assets.smartphoneDr),
                 ),
               ),
               const SizedBox(height: 10),

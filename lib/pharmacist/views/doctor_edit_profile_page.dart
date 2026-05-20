@@ -51,7 +51,7 @@ class DoctorProfileEditPage extends StatelessWidget {
                 Expanded(
                   child: Stack(
                     children: [
-                      const PharmacyPicture(picture: AssetData.pharmacyPhoto),
+                      const PharmacyPicture(picture: Assets.pharmacyPhoto),
                       Container(
                         height: 230,
                         width: double.infinity,
@@ -113,7 +113,7 @@ class DoctorProfileEditPage extends StatelessWidget {
                     showSnackBar(context, "Successfully");
                   } else if (state is UpdatePharmacistFailure) {
                     // showSnackBar(context, state.errMessage);
-                     showSnackBar(context, 'Successfully');
+                    showSnackBar(context, 'Successfully');
                     BlocProvider.of<PharmacistCubit>(context).getPharmaicst();
                   }
                 },

@@ -20,7 +20,7 @@ class SetNewPasswordView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 110, bottom: 45),
               child: Image.asset(
-                AssetData.newPassword,
+                Assets.newPassword,
                 fit: BoxFit.contain,
                 height: 220,
                 width: Dimensions.screenWidth(context),

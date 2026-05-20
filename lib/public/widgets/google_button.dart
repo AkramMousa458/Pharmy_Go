@@ -55,15 +55,17 @@ class GoogleButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(AssetData.googleIcon),
-                  const SizedBox(width: 10.0,),
+                  Image.asset(Assets.googleIcon),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
                   Text(
                     text,
                     style: TextStyle(
-                        fontSize: textSize,
-                        color: textColor,
-                        fontWeight: isBold? FontWeight.bold:FontWeight.normal,
-                      ),
+                      fontSize: textSize,
+                      color: textColor,
+                      fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                    ),
                   ),
                 ],
               ),
