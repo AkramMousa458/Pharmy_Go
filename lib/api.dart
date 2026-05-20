@@ -1,1 +1,1 @@
-const String uri = "https://spider.yamalalsham.shop/api/";
+const String uri = "https://pharmacy-laravel-latest.onrender.com/api/";

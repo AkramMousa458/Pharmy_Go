@@ -9,7 +9,6 @@ import 'package:pharmygo/core/utils/api_services.dart';
 import 'package:pharmygo/core/utils/constants.dart';
 import 'package:pharmygo/core/utils/dimensions.dart';
 import 'package:pharmygo/core/utils/icons.dart';
-import 'package:pharmygo/patient/cubits/get_nearst_pharmacies/get_nearst_pharmacies_cubit.dart';
 import 'package:pharmygo/patient/cubits/update_patient_location/update_patient_location_cubit.dart';
 import 'package:pharmygo/patient/repos/patients_repo/patients_repo_impl.dart';
 import 'package:pharmygo/patient/views/patient_drug_view.dart';
@@ -21,7 +20,6 @@ import 'package:pharmygo/patient/widgets/shimmer_home_page_patient.dart';
 import 'package:pharmygo/patient/widgets/custom_slider.dart';
 import 'package:pharmygo/patient/widgets/drugs_list.dart';
 import 'package:pharmygo/patient/widgets/option_list.dart';
-import 'package:pharmygo/public/views/map/find_nearest_pharmacis_on_map.dart';
 import 'package:pharmygo/public/views/ocr_page.dart';
 import 'package:pharmygo/public/widgets/custom_app_bar.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
@@ -67,7 +65,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
     FocusScope.of(context).unfocus();
     return BlocProvider(
       create: (context) =>
-          UpdatePatientLocationCubit(PatientsRepoImpl(ApiService(Dio()))),
+          UpdatePatientLocationCubit(PatientsRepoImpl(ApiService(Dio())))
+            ..updatePatientLocation(longitude: '', latitude: ''),
       child: Scaffold(
         backgroundColor: ThemeColors.kBackgroundColor(context),
         key: PatientHomePage.scaffoldKey,
@@ -96,48 +95,42 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     showSearch(context: context, delegate: CustomSearch());
                   },
                 ),
-                Container(
-                  width: Dimensions.screenWidth(context) - 20,
-                  height: 260,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: const CustomSlider(),
-                ),
+                SizedBox(height: 4.h),
+                CustomSlider(),
                 Padding(
                   padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        BlocConsumer<GetNearstPharmaciesCubit,
-                            GetNearstPharmaciesState>(
-                          listener: (context, state) {
-                            if (state is GetNearstPharmaciesSuccsess) {
-                              Navigator.pushNamed(
-                                  context, FindNearestPharmacisOnMap.routeName);
-                            }
-                          },
-                          builder: (context, state) {
-                            return OptionList(
-                              onTap: () async {
-                                BlocProvider.of<GetNearstPharmaciesCubit>(
-                                        context)
-                                    .getNearstPharmacies();
-                              },
-                              icon: pharmacyIcon,
-                              title: "Pharmacy",
-                            );
-                          },
-                        ),
-                        OptionList(
+                        // BlocConsumer<GetNearstPharmaciesCubit,
+                        //     GetNearstPharmaciesState>(
+                        //   listener: (context, state) {
+                        //     if (state is GetNearstPharmaciesSuccsess) {
+                        //       Navigator.pushNamed(
+                        //           context, FindNearestPharmacisOnMap.routeName);
+                        //     }
+                        //   },
+                        //   builder: (context, state) {
+                        //     return OptionListItem(
+                        //       onTap: () async {
+                        //         BlocProvider.of<GetNearstPharmaciesCubit>(
+                        //                 context)
+                        //             .getNearstPharmacies();
+                        //       },
+                        //       icon: pharmacyIcon,
+                        //       title: "Pharmacy",
+                        //     );
+                        //   },
+                        // ),
+                        OptionListItem(
                           onTap: () {
                             // Navigator.pushNamed(context, AlarmPage.routeName);
                           },
                           icon: alarmIcon,
                           title: "Alarm",
                         ),
-                        OptionList(
+                        OptionListItem(
                           onTap: () {
                             Navigator.pushNamed(context, PeopleScreen.routeName,
                                 arguments: 'patient');
@@ -145,7 +138,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                           icon: chatIcon,
                           title: "Chat",
                         ),
-                        OptionList(
+                        OptionListItem(
                           onTap: () {
                             Navigator.pushNamed(
                                 context, PatientDrugsListView.routeName);
@@ -200,29 +193,37 @@ class _PatientHomePageState extends State<PatientHomePage> {
                 BlocBuilder<FetchDrugsCubit, FetchDrugsState>(
                   builder: (context, state) {
                     if (state is FetchDrugsSuccess) {
-                      return SizedBox(
-                        height: 240,
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: ListView.builder(
-                            itemCount: 10,
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              return DrugsList(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, PatientDrugView.routeName,
-                                      arguments: state.drugs[index]);
-                                },
-                                drug: state.drugs,
-                                index: index,
-                              );
-                            },
-                          ),
-                        ),
-                      );
+                      return state.drugs.isEmpty
+                          ? SizedBox(
+                              height: 240,
+                              child: Center(child: Text("No drugs found")))
+                          : SizedBox(
+                              height: 240,
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: ListView.builder(
+                                  itemCount: state.drugs.length > 10
+                                      ? 10
+                                      : state.drugs.length,
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return DrugsList(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          PatientDrugView.routeName,
+                                          arguments: state.drugs[index],
+                                        );
+                                      },
+                                      drugModel: state.drugs[index],
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
                     } else if (state is FetchDrugsFailure) {
                       return Text(state.errMesage);
                     } else if (state is FetchDrugsLoading) {

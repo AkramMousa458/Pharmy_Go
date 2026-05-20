@@ -29,8 +29,6 @@ class _CustomSliderState extends State<CustomSlider> {
           items: _images.map((image) {
             return Container(
               alignment: Alignment.center,
-              // width: 600.w,
-              // height: 50.h,
               margin: const EdgeInsets.symmetric(vertical: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
@@ -45,6 +43,7 @@ class _CustomSliderState extends State<CustomSlider> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      SizedBox(height: 6.h),
                       Text(
                         image[0],
                         textAlign: TextAlign.center,
@@ -54,11 +53,14 @@ class _CustomSliderState extends State<CustomSlider> {
                           fontSize: 20.sp,
                         ),
                       ),
-                      SizedBox(height: 16.h),
-                      Image.asset(
-                        image[1],
-                        // width: 100.w,
-                      )
+                      SizedBox(height: 4.h),
+                      Expanded(
+                        child: Image.asset(
+                          image[1],
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
                     ],
                   ),
                 ),
@@ -68,7 +70,7 @@ class _CustomSliderState extends State<CustomSlider> {
           options: CarouselOptions(
             autoPlay: true,
             enlargeCenterPage: true,
-            aspectRatio: 1.7,
+            aspectRatio: 2.1,
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;

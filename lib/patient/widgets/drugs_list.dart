@@ -1,38 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pharmygo/core/utils/dimensions.dart';
-import 'package:pharmygo/patient/cubits/update_patient_location/update_patient_location_cubit.dart';
 import 'package:pharmygo/public/models/drug_model.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
 
-class DrugsList extends StatefulWidget {
-  const DrugsList(
-      {super.key,
-      required this.drug,
-      required this.index,
-      required this.onTap});
-  final List<DrugModel> drug;
-  final int index;
-  final void Function() onTap;
+class DrugsList extends StatelessWidget {
+  const DrugsList({
+    super.key,
+    required this.drugModel,
+    required this.onTap,
+  });
 
-  @override
-  State<DrugsList> createState() => _DrugsListState();
-}
-
-class _DrugsListState extends State<DrugsList> {
-  @override
-  void initState() {
-    BlocProvider.of<UpdatePatientLocationCubit>(context)
-        .updatePatientLocation(longitude: '', latitude: '');
-    super.initState();
-  }
+  final DrugModel drugModel;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.only(right: 20),
         child: Container(
@@ -48,7 +34,7 @@ class _DrugsListState extends State<DrugsList> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: CachedNetworkImage(
-                  imageUrl: widget.drug[widget.index].imageUrl,
+                  imageUrl: drugModel.imageUrl,
                   fit: BoxFit.cover,
                   height: Dimensions.screenWidth(context) / 2.6,
                   width: Dimensions.screenWidth(context) / 3,
@@ -60,7 +46,7 @@ class _DrugsListState extends State<DrugsList> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  widget.drug[widget.index].nameEn,
+                  drugModel.nameEn,
                   maxLines: 2,
                   style: const TextStyle(
                     fontSize: 18,

@@ -47,7 +47,7 @@ dependencies:
   flutter_background_service: ^5.0.6
   flutter_bloc: ^9.1.1
   flutter_polyline_points: ^1.0.0
-  flutter_scalable_ocr: ^2.1.0
+  flutter_scalable_ocr: ^2.2.1
   flutter_screenutil: ^5.9.0
   font_awesome_flutter: ^11.0.0
   gallery_image_viewer: ^1.2.0

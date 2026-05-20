@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -71,10 +72,10 @@ class AuthRepoImpl implements AuthRepo {
       return right(authModel);
     } catch (e) {
       if (e is DioException) {
-        // print('DioException: ${e.response?.data}');
+        log('DioException: ${e.response?.data}');
         return left(
           ServerFailure(
-            e.response?.data['message'],
+            e.response?.data['message'] ?? 'Unexpected error',
           ),
         );
       }
@@ -131,15 +132,13 @@ class AuthRepoImpl implements AuthRepo {
       );
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> resetPassword({ required String email}) async {
+  Future<Either<Failure, String>> resetPassword({required String email}) async {
     try {
       print(email);
-      var data = await apiService.post(
-          endPoint:
-              'password/reset?email=$email',
-          data: {});
+      var data = await apiService
+          .post(endPoint: 'password/reset?email=$email', data: {});
       print(data['message']);
       return right(data['message']);
     } catch (e) {
