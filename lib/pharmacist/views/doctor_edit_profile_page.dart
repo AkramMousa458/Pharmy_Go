@@ -42,7 +42,6 @@ class DoctorProfileEditPage extends StatelessWidget {
                   color: ThemeColors.kMainColor(context)),
             ),
           )),
-      // bottomNavigationBar: const PharmacistNavigationBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [

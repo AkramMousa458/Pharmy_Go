@@ -51,7 +51,6 @@ class _EditPharmacyPageState extends State<EditPharmacyPage> {
                   color: ThemeColors.kMainColor(context)),
             ),
           )),
-      // bottomNavigationBar:  PharmacistNavigationBar(),
       body: Column(children: [
         SizedBox(
           height: 500.h,

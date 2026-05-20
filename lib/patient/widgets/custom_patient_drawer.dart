@@ -10,7 +10,6 @@ import 'package:pharmygo/public/views/login_view.dart';
 import 'package:pharmygo/public/views/news_view.dart';
 import 'package:pharmygo/public/widgets/custom_drawer_tile.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
-import 'package:pharmygo/public/widgets/custom_settings_widget.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
 import 'package:pharmygo/public/widgets/custom_shimmer_child.dart';
 
@@ -104,49 +103,50 @@ class CustomPatientDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  Stack(
-                    alignment: AlignmentDirectional.topStart,
-                    children: [
-                      const SizedBox(
-                          width: 300,
-                          height: 300,
-                          child: Column(
-                            children: [
-                              CustomSettingsWidget(),
-                              Divider(
-                                endIndent: 20,
-                                indent: 30,
-                              ),
-                            ],
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 200, left: 10, right: 10),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.black,
-                            elevation: 0.5,
-                            shape: const StadiumBorder(),
-                            backgroundColor: ThemeColors.kMainColor(context),
-                            minimumSize: const Size(320, 48),
-                          ),
-                          onPressed: () {
-                            BlocProvider.of<AuthCubit>(context).logout();
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, LoginView.routeName, (route) => false);
-                          },
-                          child: Text(
-                            "Log out",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: ThemeColors.kTextColor(context)),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 30),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 200, left: 10, right: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.black,
+                        elevation: 0.5,
+                        shape: const StadiumBorder(),
+                        backgroundColor: ThemeColors.kMainColor(context),
+                        minimumSize: const Size(320, 48),
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<AuthCubit>(context).logout();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, LoginView.routeName, (route) => false);
+                      },
+                      child: Text(
+                        "Log out",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: ThemeColors.kTextColor(context)),
+                      ),
+                    ),
+                  )
+                  // Stack(
+                  //   alignment: AlignmentDirectional.topStart,
+                  //   children: [
+                  //     const SizedBox(
+                  //         width: 300,
+                  //         height: 300,
+                  //         child: Column(
+                  //           children: [
+                  //             CustomSettingsWidget(),
+                  //             Divider(
+                  //               endIndent: 20,
+                  //               indent: 30,
+                  //             ),
+                  //           ],
+                  //         )),
+
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 30),
                 ],
               ),
             ),

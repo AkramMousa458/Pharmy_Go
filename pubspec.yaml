@@ -35,7 +35,7 @@ dependencies:
   flutter_slidable: ^4.0.3
   cloud_firestore: ^5.0.2
   cupertino_icons: ^1.0.2
-  curved_navigation_bar: ^1.0.3
+  curved_navigation_bar: ^1.0.6
   dartz: ^0.10.1
   device_preview: ^1.1.0
   dio: ^5.4.3+1

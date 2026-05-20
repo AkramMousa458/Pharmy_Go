@@ -51,7 +51,6 @@ class PatientProfileEditPage extends StatelessWidget {
                   color: ThemeColors.kMainColor(context)),
             ),
           )),
-      // bottomNavigationBar: const PatientNavigationBar(),
       body: SingleChildScrollView(
         child: Center(
           child: Column(

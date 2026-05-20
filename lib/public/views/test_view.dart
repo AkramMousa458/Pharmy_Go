@@ -7,6 +7,7 @@ import 'package:pharmygo/public/widgets/custom_app_bar.dart';
 import 'package:pharmygo/public/widgets/custom_button.dart';
 import 'package:pharmygo/public/widgets/custom_text_field.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
+
 class TestView extends StatelessWidget {
   const TestView({super.key});
   static const String routeName = "/testscreen";
@@ -14,6 +15,7 @@ class TestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       key: scaffoldKey,
       drawer: const Drawer(
         child: CustomPatientDrawer(),

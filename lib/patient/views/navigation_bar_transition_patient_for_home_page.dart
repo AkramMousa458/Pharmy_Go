@@ -56,6 +56,7 @@ class _NavigationBarTransitionPatientForHomePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: PageView(
         controller: _pageController,
         children: screens,

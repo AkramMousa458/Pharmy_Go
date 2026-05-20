@@ -38,7 +38,6 @@ class PatientProfilePage extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
       ),
-      // bottomNavigationBar: const PatientNavigationBar(),
       body: BlocBuilder<PatientCubit, PatientState>(
         builder: (context, state) {
           if (state is FetchPatientSuccess) {

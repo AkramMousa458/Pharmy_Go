@@ -39,7 +39,6 @@ class DoctorProfilePage extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
       ),
-      // bottomNavigationBar: const PharmacistNavigationBar(),
       body: BlocBuilder<PharmacistCubit, PharmacistState>(
         builder: (context, state) {
           if (state is FetchPharmacistSuccess) {

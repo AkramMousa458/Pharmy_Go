@@ -21,7 +21,6 @@ class NewsView extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          // backgroundColor: Colors.transparent,
         ),
       ),
       body: const NewsViewBody(),

@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:pharmygo/public/models/article_model.dart';
+
+final String apiKey = '5b66ca3a0c254feea2b17201b0478e0a';
 
 class NewsService {
   final Dio dio;
@@ -10,7 +14,8 @@ class NewsService {
   Future<List<ArticleModel>> getTopHeadlines() async {
     try {
       Response res = await dio.get(
-          "https://newsapi.org/v2/top-headlines?country=eg&apiKey=7a1a8180e956408d8f2484a4ea2aa850&category=health");
+          "https://newsapi.org/v2/everything?q=health&language=ar&sortBy=publishedAt&apiKey=$apiKey");
+      log('res:${res.data}');
       Map<String, dynamic> jsonData = res.data;
       List<dynamic> articles = jsonData['articles'];
       List<ArticleModel> articlesList = [];

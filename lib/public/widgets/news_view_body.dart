@@ -23,13 +23,10 @@ class NewsViewBody extends StatelessWidget {
           List<ArticleModel> news = snapshot.data!;
           return ListView.builder(
             itemCount: news.length,
-            itemBuilder: (context, index) {
-              final article = news[index];
+            itemBuilder: (BuildContext context, int index) {
+              final ArticleModel article = news[index];
               return NewsItem(
-                // imgUrl: article.image ??  "https://emgf-wordpress-media.s3.eu-west-2.amazonaws.com/wp-content/uploads/2021/08/24133928/empty-180x180.jpg", // Provide a default value if null
-                subTitle: article.subTitle ??
-                    'No subtitle', // Provide a default value if null
-                title: article.title, // Provide a default value if null
+                article: article,
               );
             },
           );

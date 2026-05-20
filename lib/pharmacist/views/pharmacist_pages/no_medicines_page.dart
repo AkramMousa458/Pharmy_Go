@@ -14,6 +14,7 @@ class NoMedicinesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBody: true,
         backgroundColor: ThemeColors.kBackgroundColor(context),
         key: scaffoldKey,
         drawer: const Drawer(
