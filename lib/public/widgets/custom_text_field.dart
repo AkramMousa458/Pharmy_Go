@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
-import 'package:pharmygo/core/utils/dimensions.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField(
@@ -75,17 +74,14 @@ class CustomTextField extends StatelessWidget {
               ),
               color: ThemeColors.kSecondColor(context),
             ),
-            prefixIcon: startIcon != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: FaIcon(
-                      startIcon,
-                      size: startIconSize ??
-                          Dimensions.screenWidth(context) * 0.06,
-                      color: ThemeColors.kSecondColor(context),
-                    ),
-                  )
-                : null,
+            prefixIcon: IconButton(
+              onPressed: onTap,
+              icon: FaIcon(
+                startIcon,
+                size: startIconSize,
+              ),
+              color: ThemeColors.kSecondColor(context),
+            ),
             contentPadding: const EdgeInsets.only(left: 10, top: 20),
             label: label != null ? Text(label!) : null,
             hintText: hintText,

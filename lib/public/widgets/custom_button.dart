@@ -55,14 +55,30 @@ class CustomButton extends StatelessWidget {
               padding: const EdgeInsets.all(10), // Adjust padding as needed
               child: Center(
                 child: isLoading
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 136.w),
-                        child: backgroundColor == kMainButtonColor
-                            ? const CustomLoadingIndicator(
-
-                              )
-                            : const CustomLoadingIndicator(
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 22.w,
+                            height: 20.h,
+                            child: Center(
+                              child: CustomLoadingIndicator(
+                                color: textColor,
                               ),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            text,
+                            style: TextStyle(
+                                fontSize: textSize,
+                                color: textColor,
+                                fontWeight: isBold
+                                    ? FontWeight.bold
+                                    : FontWeight.normal),
+                          ),
+                        ],
                       )
                     : Text(
                         text,

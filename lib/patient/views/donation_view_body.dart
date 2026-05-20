@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pharmygo/core/helper/show_snack_bar.dart';
 import 'package:pharmygo/patient/cubits/donation/donation_cubit.dart';
+import 'package:pharmygo/patient/models/donation_model.dart';
 import 'package:pharmygo/public/widgets/custom_button.dart';
 import 'package:pharmygo/public/widgets/custom_text_field.dart';
 
@@ -11,9 +12,9 @@ class DonationViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final donationFormKey = GlobalKey<FormState>();
-    String nameOfMedcine = '', address = '';
-    String quantityOfMedcine = "0";
-    bool isLoading = false;
+    TextEditingController nameOfMedcineController = TextEditingController();
+    TextEditingController quantityOfMedcineController = TextEditingController();
+    TextEditingController addressController = TextEditingController();
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -26,6 +27,7 @@ class DonationViewBody extends StatelessWidget {
                 .min, // Ensure the column takes the minimum vertical space
             children: [
               CustomTextField(
+                controller: nameOfMedcineController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the Medicine\'s Name';
@@ -33,14 +35,12 @@ class DonationViewBody extends StatelessWidget {
                   return null;
                 },
                 hintText: "Medicine Name",
-                onChange: (data) {
-                  nameOfMedcine = data;
-                },
               ),
               SizedBox(
                 height: 16.h,
               ),
               CustomTextField(
+                controller: quantityOfMedcineController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the Quantity';
@@ -49,14 +49,12 @@ class DonationViewBody extends StatelessWidget {
                 },
                 hintText: "Medicine Quantity",
                 isNumber: true,
-                onChange: (data) {
-                  quantityOfMedcine = data;
-                },
               ),
               SizedBox(
                 height: 16.h,
               ),
               CustomTextField(
+                controller: addressController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the Address';
@@ -64,25 +62,23 @@ class DonationViewBody extends StatelessWidget {
                   return null;
                 },
                 hintText: "Address",
-                onChange: (data) {
-                  address = data;
-                },
               ),
-              SizedBox(
-                height: 16.h,
-              ),
-              CustomTextField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the Medicine\'s Expiery Date';
-                  }
-                  return null;
-                },
-                hintText: "Expiery Date",
-                onChange: (data) {
-                  nameOfMedcine = data;
-                },
-              ),
+              // SizedBox(
+              //   height: 16.h,
+              // ),
+              // CustomTextField(
+              //   controller: expieryDateController,
+              //     validator: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return 'Please enter the Medicine\'s Expiery Date';
+              //     }
+              //     return null;
+              //   },
+              //   hintText: "Expiery Date",
+              //   // onChange: (data) {
+              //   //   nameOfMedcine = data;
+              //   // },
+              // ),
               SizedBox(
                 height: 50.h,
               ),
@@ -92,14 +88,13 @@ class DonationViewBody extends StatelessWidget {
                   BlocConsumer<DonationCubit, DonationState>(
                     listener: (context, state) {
                       if (state is DonationSuccsess) {
-                        showSnackBar(context, "Medicine Added");
+                        showSnackBar(context, "Thanks For Your Donation 💕");
+                        nameOfMedcineController.clear();
+                        quantityOfMedcineController.clear();
+                        addressController.clear();
                       }
                       if (state is DonationFailure) {
-                        showSnackBar(context, "Medicine Added");
-                        // showSnackBar(context, state.errMessage);
-                      }
-                      if (state is DonationLoading) {
-                        isLoading = true;
+                        showSnackBar(context, state.errMessage);
                       }
                     },
                     builder: (context, state) {
@@ -108,13 +103,17 @@ class DonationViewBody extends StatelessWidget {
                         onPressed: () {
                           if (donationFormKey.currentState!.validate()) {
                             BlocProvider.of<DonationCubit>(context).addDonation(
-                                quantityOfMedcine: quantityOfMedcine,
-                                address: address,
-                                nameOfMedcine: nameOfMedcine);
+                              dontaion: DonationModel(
+                                nameOfMedcine: nameOfMedcineController.text,
+                                address: addressController.text,
+                                quantityOfMedcine:
+                                    quantityOfMedcineController.text,
+                              ),
+                            );
                           }
                         },
                         text: "Confirm",
-                        isLoading: isLoading,
+                        isLoading: state is DonationLoading,
                       );
                     },
                   ),

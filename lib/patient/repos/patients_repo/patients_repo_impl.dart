@@ -1,6 +1,6 @@
 // import 'package:pharmygo/Features/home/data/models/book_model/book_model.dart';
 
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_log
 
 import 'dart:convert';
 import 'dart:developer';
@@ -76,9 +76,9 @@ class PatientsRepoImpl implements PatientsRepo {
         if (profileImageMultipart != null) "image_url": profileImageMultipart,
       });
 
-      // Print the form data for debugging
-      print('FormData: ${formData.fields}');
-      print('Profile Image: ${profileImageMultipart?.filename}');
+      // log the form data for debugging
+      log('FormData: ${formData.fields}');
+      log('Profile Image: ${profileImageMultipart?.filename}');
 
       // Send the request
       var response = await apiService.postUpdate(
@@ -86,14 +86,14 @@ class PatientsRepoImpl implements PatientsRepo {
         endPoint: endpoint,
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       PatientModel result = PatientModel.fromJson(response['message']);
       return right(result);
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -109,7 +109,7 @@ class PatientsRepoImpl implements PatientsRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int id = prefs.getInt("auth-id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id, DrugID: $drugId============================');
       // Send the request
       var response = await apiService.get(
@@ -117,8 +117,8 @@ class PatientsRepoImpl implements PatientsRepo {
             'home/patient/dashboard/showNearestPharmacies/user/$id/drug/$drugId',
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -132,8 +132,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -149,15 +149,15 @@ class PatientsRepoImpl implements PatientsRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int id = prefs.getInt("auth-id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id, DrugID:============================');
       // Send the request
       var response = await apiService.get(
         endPoint: 'home/patient/dashboard/showNearestPharmacies/user/$id',
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -171,8 +171,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -188,9 +188,9 @@ class PatientsRepoImpl implements PatientsRepo {
       required int quantity}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt("auth-id") ?? 0;
+      int id = prefs.getInt("id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id============================');
       final body = jsonEncode({
         'items': [
@@ -206,8 +206,8 @@ class PatientsRepoImpl implements PatientsRepo {
               'home/patient/dashboard/storeCart/patient/$id/pharmacy/$pharmacyId',
           data: body);
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -219,8 +219,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -233,7 +233,7 @@ class PatientsRepoImpl implements PatientsRepo {
   Future<Either<Failure, List<OrderModel>>> getCart() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt("auth-id") ?? 0;
+      int id = prefs.getInt("id") ?? 0;
 
       log('============================userID: $id ===========================');
       // Send the request
@@ -241,8 +241,8 @@ class PatientsRepoImpl implements PatientsRepo {
         endPoint: 'home/patient/dashboard/$id/getAllCarts',
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       List<dynamic> messages = response['message'];
       List<OrderModel> result =
@@ -256,8 +256,8 @@ class PatientsRepoImpl implements PatientsRepo {
       //   return left(ServerFailure('Unexpected response format'));
       // }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -275,7 +275,7 @@ class PatientsRepoImpl implements PatientsRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int id = prefs.getInt("id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id, DrugID:============================');
       final body = jsonEncode({
         'items': [
@@ -291,8 +291,8 @@ class PatientsRepoImpl implements PatientsRepo {
               'home/patient/dashboard/storeOrder/patient/$id/pharmacy/$pharmacyId',
           data: body);
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -304,8 +304,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -320,15 +320,15 @@ class PatientsRepoImpl implements PatientsRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int id = prefs.getInt("id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id ===========================');
       // Send the request
       var response = await apiService.get(
         endPoint: 'home/patient/dashboard/$id/getAllOrders',
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -341,8 +341,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -356,16 +356,16 @@ class PatientsRepoImpl implements PatientsRepo {
       {required int orderId}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt("auth-id") ?? 0;
+      int id = prefs.getInt("id") ?? 0;
 
-      print(
+      log(
           '============================userID: $id ============================');
       // Send the request
       var response = await apiService.delete(
           endPoint: 'home/patient/dashboard/delete/$id/cart/$orderId');
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
@@ -377,8 +377,8 @@ class PatientsRepoImpl implements PatientsRepo {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
@@ -395,7 +395,7 @@ class PatientsRepoImpl implements PatientsRepo {
     try {
       Position position = await _getCurrentLocation();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print(position.longitude);
+      log(position.longitude.toString());
       int id = prefs.getInt("auth-id") ?? 0;
       String endpoint =
           'home/patient/dashboard/storeInformation/$id?longitude=${position.latitude}&latitude=${position.longitude}';
@@ -406,14 +406,14 @@ class PatientsRepoImpl implements PatientsRepo {
         endPoint: endpoint,
       );
 
-      // Print the response for debugging
-      print('Response: $response');
+      // log the response for debugging
+      log('Response: $response');
 
       String result = response['message'];
       return right(result);
     } catch (e) {
-      // Print the error for debugging
-      print('Error: $e');
+      // log the error for debugging
+      log('Error: $e');
 
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));

@@ -2,6 +2,8 @@
 
 // ignore_for_file: avoid_print
 
+import 'dart:developer';
+
 import 'package:pharmygo/core/errors/failures.dart';
 import 'package:pharmygo/core/utils/api_services.dart';
 
@@ -17,20 +19,18 @@ class DonationRepoImpl implements DonationRepo {
   DonationRepoImpl(this.apiService);
 
   @override
-  Future<Either<Failure, DonationModel>> addDonation(
-      {required String nameOfMedcine,
-      required String address,
-      required String quantityOfMedcine}) async {
+  Future<Either<Failure, String>> addDonation({
+    required DonationModel dontaion,
+  }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int id = prefs.getInt("id") ?? 0;
     try {
       var data = await apiService.post(
           endPoint:
-              'home/patient/dashboard/storeDonation?patient_id=$id&drug_name=$nameOfMedcine&quantity=$quantityOfMedcine&address=$address',
+              'home/patient/dashboard/storeDonation?patient_id=$id&drug_name=${dontaion.nameOfMedcine}&quantity=${dontaion.quantityOfMedcine}&address=${dontaion.address}',
           data: {});
-      print(data['message']);
-      DonationModel donationModel = DonationModel.fromJson(data['message']);
-      return right(donationModel);
+      log('donate data: $data');
+      return right(data['message']);
     } catch (e) {
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
