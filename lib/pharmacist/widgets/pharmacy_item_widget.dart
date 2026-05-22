@@ -46,7 +46,13 @@ class PharmacyItemWidget extends StatelessWidget {
               backgroundColor: ThemeColors.kMainColor(context),
               iconColor: ThemeColors.kBackgroundColor(context),
               iconSize: 22.sp,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, FindPharmacyOnMapWithDrug.routeName, arguments: {
+                  'nearesrPharmacy': nearestPharmacyModel,
+                  'drugModel': drugModel
+                });
+              },
             ),
           ],
         ),

@@ -142,6 +142,7 @@
 //   }
 // }
 
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -207,7 +208,7 @@ class CustomDrugsOrderListWidget extends StatelessWidget {
                       ),
                       Text(
                         '${productModel.price} LE',
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: ThemeColors.kPriceColor(context),
                           fontSize: 30,
                         ),
@@ -252,6 +253,7 @@ class CustomDrugsOrderListWidget extends StatelessWidget {
                 showSnackBar(context, state.errMessage);
                 return const SizedBox();
               } else if (state is GetNearstPharmciesWithDrugSuccsess) {
+                log("success state.nearstPharmacies ${state.nearstPharmacies}");
                 return state.nearstPharmacies.isEmpty
                     ? Center(
                         child: Text(
@@ -266,8 +268,7 @@ class CustomDrugsOrderListWidget extends StatelessWidget {
                         itemCount: state.nearstPharmacies.length,
                         itemBuilder: (context, index) {
                           return PharmacyItemWidget(
-                            nearestPharmacyModel:
-                                state.nearstPharmacies[index],
+                            nearestPharmacyModel: state.nearstPharmacies[index],
                             drugModel: productModel,
                           );
                         },

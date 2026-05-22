@@ -45,30 +45,16 @@ class DoctorProfilePage extends StatelessWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const PharmacyPicture(picture: Assets.pharmacyPhoto)
-                  // Container(
-                  //   decoration: const BoxDecoration(color: Color(0xFF0B3490)),
-                  //   height: 230,
-                  // ),
-                  ,
+                  const PharmacyPicture(picture: Assets.pharmacyPhoto),
                   DataShow(
                     icon: profileIcon,
                     data: state.pharmacist.name,
-                    // width: 600,
-                    // hintColor:  ThemeColors.kSecondColor(context),
                   ),
                   DataShow(
                     icon: emailIcon,
                     data: state.pharmacist.email,
-                    // width: 600,
-                    // hintColor:  ThemeColors.kSecondColor(context)
                   ),
-                  DataShow(
-                    icon: mobileIcon,
-                    data: state.pharmacist.phone,
-                    // width: 600,
-                    // hintColor:  ThemeColors.kSecondColor(context),
-                  ),
+                  DataShow(icon: mobileIcon, data: state.pharmacist.phone),
                   Padding(
                       padding: const EdgeInsets.only(
                           left: 7.0, top: 25, right: 7.0, bottom: 7.0),

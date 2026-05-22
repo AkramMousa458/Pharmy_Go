@@ -5,9 +5,9 @@ import 'package:pharmygo/pharmacist/cubits/pharmacist_cubit/pharmacist_cubit.dar
 import 'package:pharmygo/pharmacist/views/navigation_bar_transition_pharmcy_for_profile.dart';
 import 'package:pharmygo/public/cubits/auth_cubit/auth_cubit.dart';
 import 'package:pharmygo/public/views/login_view.dart';
+import 'package:pharmygo/public/views/news_view.dart';
 import 'package:pharmygo/public/widgets/custom_drawer_tile.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
-import 'package:pharmygo/public/widgets/custom_settings_widget.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
 
 class CustomPharmacistDrawer extends StatelessWidget {
@@ -79,59 +79,60 @@ class CustomPharmacistDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  // CustomDrawerTile(
-                  //   title: "News",
-                  //   icon: Icons.newspaper,
-                  //   onTap: () {
-                  //     Navigator.pushNamed(
-                  //       context,
-                  //       NewsView.routeName,
-                  //     );
-                  //   },
-                  // ),
-                  Stack(
-                    alignment: AlignmentDirectional.topStart,
-                    children: [
-                      const SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Column(
-                          children: [
-                            CustomSettingsWidget(),
-                            Divider(
-                              endIndent: 20,
-                              indent: 30,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 300, left: 10, right: 10),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.black,
-                            elevation: 0.5,
-                            shape: const StadiumBorder(),
-                            backgroundColor: ThemeColors.kMainColor(context),
-                            minimumSize: const Size(320, 48),
-                          ),
-                          onPressed: () {
-                            BlocProvider.of<AuthCubit>(context).logout();
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, LoginView.routeName, (route) => false);
-                          },
-                          child: Text(
-                            "Log out",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: ThemeColors.kTextColor(context)),
-                          ),
-                        ),
-                      )
-                    ],
+                  CustomDrawerTile(
+                    title: "News",
+                    icon: Icons.newspaper,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        NewsView.routeName,
+                      );
+                    },
                   ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 300, left: 10, right: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.black,
+                        elevation: 0.5,
+                        shape: const StadiumBorder(),
+                        backgroundColor: ThemeColors.kMainColor(context),
+                        minimumSize: const Size(320, 48),
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<AuthCubit>(context).logout();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, LoginView.routeName, (route) => false);
+                      },
+                      child: Text(
+                        "Log out",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: ThemeColors.kTextColor(context)),
+                      ),
+                    ),
+                  ),
+                  // Stack(
+                  //   alignment: AlignmentDirectional.topStart,
+                  //   children: [
+                  //     const SizedBox(
+                  //       width: 300,
+                  //       height: 300,
+                  //       child: Column(
+                  //         children: [
+                  //           CustomSettingsWidget(),
+                  //           Divider(
+                  //             endIndent: 20,
+                  //             indent: 30,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+
+                  //   ],
+                  // ),
                   const SizedBox(height: 30),
                 ],
               ),

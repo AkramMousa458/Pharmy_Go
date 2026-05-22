@@ -47,7 +47,7 @@ class CustomSearchForPharmacist extends SearchDelegate {
 
     return query.isNotEmpty
         ? Column(
-            children: [
+          children: [
               Expanded(
                 child: BlocBuilder<FetchDrugsCubit, FetchDrugsState>(
                   builder: (context, state) {

@@ -254,44 +254,44 @@ class LoginView extends StatelessWidget {
                               },
                             );
                           },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height:
-                                      2, // Adjust the height of the horizontal line
-                                  color: ThemeColors.kGreyColor(context),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                child: Text(
-                                  "or sign in with",
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: ThemeColors.kGreyColor(context),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height:
-                                      2, // Adjust the height of the horizontal line
-                                  color: ThemeColors.kGreyColor(context),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GoogleButton(
-                          onPressed: () {},
-                          text: "Continue with Google",
-                        ),
+                      ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        //   child: Row(
+                        //     children: [
+                        //       Expanded(
+                        //         child: Container(
+                        //           height:
+                        //               2, // Adjust the height of the horizontal line
+                        //           color: ThemeColors.kGreyColor(context),
+                        //         ),
+                        //       ),
+                        //       Padding(
+                        //         padding: const EdgeInsets.symmetric(
+                        //             horizontal: 16.0),
+                        //         child: Text(
+                        //           "or sign in with",
+                        //           style: TextStyle(
+                        //             fontSize: 16.sp,
+                        //             fontWeight: FontWeight.bold,
+                        //             color: ThemeColors.kGreyColor(context),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       Expanded(
+                        //         child: Container(
+                        //           height:
+                        //               2, // Adjust the height of the horizontal line
+                        //           color: ThemeColors.kGreyColor(context),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // GoogleButton(
+                        //   onPressed: () {},
+                        //   text: "Continue with Google",
+                        // ),
                         SizedBox(
                           height: 25.h,
                         ),

@@ -12,14 +12,15 @@ import 'package:pharmygo/public/widgets/custom_button.dart';
 class MyCartView extends StatefulWidget {
   const MyCartView({super.key});
 
-  static const routeName = '/MyCartView';
-  static final scaffoldKey = GlobalKey<ScaffoldState>();
+  static const String routeName = '/MyCartView';
 
   @override
   State<MyCartView> createState() => _MyCartViewState();
 }
 
 class _MyCartViewState extends State<MyCartView> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     BlocProvider.of<GetCartCubit>(context).getCart();
@@ -29,7 +30,7 @@ class _MyCartViewState extends State<MyCartView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: MyCartView.scaffoldKey,
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(
           'My Cart',

@@ -46,7 +46,9 @@ class _EditPharmacyPageState extends State<EditPharmacyPage> {
             ),
             centerTitle: true,
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: Icon(Icons.arrow_back_ios_new_rounded,
                   color: ThemeColors.kMainColor(context)),
             ),

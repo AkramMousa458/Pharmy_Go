@@ -129,7 +129,7 @@ Future<dynamic> optionBuyBottomSheet(
                             Row(
                               children: [
                                 Text(
-                                  'Order Quantity: ',
+                                  'Quantity: ',
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     color: ThemeColors.kMainColor(context),
@@ -217,19 +217,19 @@ Future<dynamic> optionBuyBottomSheet(
                                                 QuantityCounterCubit>(context)
                                             .quantity);
                               },
-                              text: "Add To Cart",
+                              text: "Add to cart",
                             );
                           },
                         ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        CustomButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          text: "Start Trip",
-                        ),
+                        // SizedBox(
+                        //   height: 6.h,
+                        // ),
+                        // CustomButton(
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        //   text: "Start Trip",
+                        // ),
                       ],
                     )
                   : Column(
@@ -240,15 +240,15 @@ Future<dynamic> optionBuyBottomSheet(
                             color: Color.fromARGB(234, 158, 158, 158),
                           ),
                         ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        CustomButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          text: "Start Trip",
-                        ),
+                        // SizedBox(
+                        //   height: 6.h,
+                        // ),
+                        // CustomButton(
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        //   text: "Start Trip",
+                        // ),
                       ],
                     ),
             ],

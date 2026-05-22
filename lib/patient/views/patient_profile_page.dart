@@ -17,13 +17,11 @@ class PatientProfilePage extends StatelessWidget {
   const PatientProfilePage({super.key});
 
   static const String routeName = "/PatientProfilePage";
-  static final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeColors.kSecondBackgroundColor(context),
-      key: scaffoldKey,
       appBar: PreferredSize(
         preferredSize: appBarSize,
         child: AppBar(

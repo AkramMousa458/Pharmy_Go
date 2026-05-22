@@ -22,7 +22,7 @@ class GetNearstPharmciesWithDrugCubit
       // nearstPharmacies.addAll(pharmacies);
       List<NearestPharmacyModel> nearstPharmacies = [];
       for (var element in pharmacies) {
-        if (element.distance <= 1000) {
+        if (element.distance <= 10000) {
           nearstPharmacies.add(element);
         }
       }

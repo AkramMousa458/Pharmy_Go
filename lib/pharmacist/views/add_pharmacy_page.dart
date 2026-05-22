@@ -14,22 +14,46 @@ import 'package:pharmygo/public/widgets/custom_checkbox.dart';
 import 'package:pharmygo/public/widgets/custom_text_field.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
 
-class AddPharmacyPage extends StatelessWidget {
+class AddPharmacyPage extends StatefulWidget {
   const AddPharmacyPage({super.key});
 
   static String routeName = "/AddPharmacyPage";
   static final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  State<AddPharmacyPage> createState() => _AddPharmacyPageState();
+}
+
+class _AddPharmacyPageState extends State<AddPharmacyPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
+  bool _deliveryYes = false;
+  bool _deliveryNo = true;
+  bool _isLoading = false;
+  String _pharmacyName = "";
+  String _pharmacyLocation = "";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<DeliveryCubit>(context).setDelivery(false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _locationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool deliveryYes = false, deliveryNo = true, isLoading = false;
-    String pharmacyName = "", pharmacyLocation = "";
-    Position? position;
-    late TextEditingController pharmacyLocationController =
-        TextEditingController();
     return Scaffold(
       backgroundColor: ThemeColors.kSecondBackgroundColor(context),
-      key: scaffoldKey,
+      key: AddPharmacyPage.scaffoldKey,
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, 50),
         child: AppBar(
@@ -43,7 +67,7 @@ class AddPharmacyPage extends StatelessWidget {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              // Handle back button press
+              Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back_ios_new_rounded,
                 color: ThemeColors.kMainColor(context)),
@@ -64,8 +88,9 @@ class AddPharmacyPage extends StatelessWidget {
             child: CustomTextField(
               hintText: 'Pharmacy Name',
               hintColor: ThemeColors.kSecondColor(context),
+              controller: _nameController,
               onChange: (value) {
-                pharmacyName = value;
+                _pharmacyName = value;
               },
               width: 400,
             ),
@@ -76,19 +101,57 @@ class AddPharmacyPage extends StatelessWidget {
               hintText: 'Pharmacy Location',
               hintColor: ThemeColors.kSecondColor(context),
               endIcon: FontAwesomeIcons.locationCrosshairs,
-              controller: pharmacyLocationController,
+              controller: _locationController,
               onTapEndIcon: () async {
+                bool isLocationServiceEnabled =
+                    await Geolocator.isLocationServiceEnabled();
+                if (!isLocationServiceEnabled) {
+                  if (mounted) {
+                    showSnackBar(context, 'Please activate the GPS!');
+                  }
+                  await Geolocator.openLocationSettings();
+                  return;
+                }
+
+                LocationPermission permission =
+                    await Geolocator.checkPermission();
+                if (permission == LocationPermission.denied) {
+                  permission = await Geolocator.requestPermission();
+                  if (permission == LocationPermission.denied) {
+                    if (mounted) {
+                      showSnackBar(context, 'Please activate the GPS!');
+                    }
+                    return;
+                  }
+                }
+
+                if (permission == LocationPermission.deniedForever) {
+                  if (mounted) {
+                    showSnackBar(context, 'Please activate the GPS!');
+                  }
+                  await Geolocator.openAppSettings();
+                  return;
+                }
+
                 try {
-                  position = await _getCurrentLocation();
-                  pharmacyLocation =
-                      '${position!.longitude},${position!.latitude}';
-                  showSnackBar(context, 'Your Current Loacation Added');
+                  Position currentPosition =
+                      await Geolocator.getCurrentPosition();
+                  if (mounted) {
+                    setState(() {
+                      _pharmacyLocation =
+                          '${currentPosition.longitude},${currentPosition.latitude}';
+                      _locationController.text = _pharmacyLocation;
+                    });
+                    showSnackBar(context, 'Your Current Location Added');
+                  }
                 } catch (e) {
-                  showSnackBar(context, "Error getting current location");
+                  if (mounted) {
+                    showSnackBar(context, "Error getting current location");
+                  }
                 }
               },
               onChange: (value) {
-                pharmacyLocation = value;
+                _pharmacyLocation = value;
               },
               width: 400,
             ),
@@ -96,11 +159,11 @@ class AddPharmacyPage extends StatelessWidget {
           BlocBuilder<DeliveryCubit, DeliveryState>(
             builder: (context, state) {
               if (state is DeliveryYes) {
-                deliveryYes = true;
-                deliveryNo = false;
+                _deliveryYes = true;
+                _deliveryNo = false;
               } else if (state is DeliveryNo) {
-                deliveryYes = false;
-                deliveryNo = true;
+                _deliveryYes = false;
+                _deliveryNo = true;
               }
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -114,14 +177,14 @@ class AddPharmacyPage extends StatelessWidget {
                     ),
                   ),
                   CustomCheckBox(
-                    check: deliveryYes,
+                    check: _deliveryYes,
                     onChange: (value) {
                       BlocProvider.of<DeliveryCubit>(context).setDelivery(true);
                     },
                     text: "Yes",
                   ),
                   CustomCheckBox(
-                    check: deliveryNo,
+                    check: _deliveryNo,
                     onChange: (value) {
                       BlocProvider.of<DeliveryCubit>(context)
                           .setDelivery(false);
@@ -136,22 +199,29 @@ class AddPharmacyPage extends StatelessWidget {
           BlocConsumer<AddPharmacyCubit, AddPharmacyState>(
             listener: (context, state) {
               if (state is AddPharmacyLoading) {
-                isLoading = true;
+                setState(() {
+                  _isLoading = true;
+                });
               } else if (state is AddPharmacySuccess) {
                 showSnackBar(context, "Successfully added pharmacy");
-                isLoading = false;
+                setState(() {
+                  _isLoading = false;
+                });
+                Navigator.pop(context);
               } else if (state is AddPharmacyFailure) {
                 showSnackBar(context, state.errMessage);
-                isLoading = false;
+                setState(() {
+                  _isLoading = false;
+                });
               }
             },
             builder: (context, state) {
               return CustomButton(
                 text: 'ADD',
                 width: 250,
-                isLoading: isLoading,
+                isLoading: _isLoading,
                 onPressed: () {
-                  if (pharmacyName.isEmpty || pharmacyLocation.isEmpty) {
+                  if (_pharmacyName.isEmpty || _pharmacyLocation.isEmpty) {
                     showSnackBar(context, "Please fill all fields");
                     return;
                   }
@@ -159,7 +229,7 @@ class AddPharmacyPage extends StatelessWidget {
                   double longitude, latitude;
 
                   try {
-                    List<String> parts = pharmacyLocation.split(',');
+                    List<String> parts = _pharmacyLocation.split(',');
                     if (parts.length != 2) {
                       throw const FormatException('Invalid format');
                     }
@@ -172,8 +242,8 @@ class AddPharmacyPage extends StatelessWidget {
                   }
 
                   BlocProvider.of<AddPharmacyCubit>(context).addPharmacy(
-                    delivery: deliveryYes ? 1 : 0,
-                    pharmacyName: pharmacyName,
+                    delivery: _deliveryYes ? 1 : 0,
+                    pharmacyName: _pharmacyName,
                     longitude: longitude,
                     latitude: latitude,
                   );
@@ -185,36 +255,5 @@ class AddPharmacyPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled, do something
-      throw Exception('Location services are disabled.');
-    }
-
-    // Check for location permissions
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, do something
-        throw Exception('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately
-      throw Exception(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // Get the current location
-    return await Geolocator.getCurrentPosition();
   }
 }

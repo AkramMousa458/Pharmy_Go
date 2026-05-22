@@ -30,16 +30,18 @@ class PharmacistHomePage extends StatefulWidget {
   State<PharmacistHomePage> createState() => _PharmacistHomePageState();
 }
 
-String _dropdownValue = 'No pharmacies yet';
-
 class _PharmacistHomePageState extends State<PharmacistHomePage> {
+  String _dropdownValue = 'No pharmacies yet';
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<PharmacistCubit>(context).getPharmaicst().then((value) {
+    BlocProvider.of<PharmacistCubit>(context).getPharmaicst().then((void _) {
+      if (!mounted) return;
       BlocProvider.of<GetMyPharmaciesCubit>(context)
           .getMyPharmacies()
-          .then((value) {
+          .then((void _) {
+        if (!mounted) return;
         BlocProvider.of<GetShortageDrugCubit>(context).getShortageDrugs(
             pharmacyId: BlocProvider.of<GetMyPharmaciesCubit>(context)
                 .choosenPharmacy
@@ -48,16 +50,17 @@ class _PharmacistHomePageState extends State<PharmacistHomePage> {
             pharmacyId: BlocProvider.of<GetMyPharmaciesCubit>(context)
                 .choosenPharmacy
                 .id);
-
-        if (BlocProvider.of<GetMyPharmaciesCubit>(context)
-            .myPharmacies
-            .isNotEmpty) {
-          _dropdownValue = BlocProvider.of<GetMyPharmaciesCubit>(context)
-              .choosenPharmacy
-              .pharmacyName;
-        } else {
-          _dropdownValue = 'No pharmacies yet';
-        }
+        setState(() {
+          if (BlocProvider.of<GetMyPharmaciesCubit>(context)
+              .myPharmacies
+              .isNotEmpty) {
+            _dropdownValue = BlocProvider.of<GetMyPharmaciesCubit>(context)
+                .choosenPharmacy
+                .pharmacyName;
+          } else {
+            _dropdownValue = 'No pharmacies yet';
+          }
+        });
       });
     });
   }
@@ -74,7 +77,7 @@ class _PharmacistHomePageState extends State<PharmacistHomePage> {
         preferredSize: appBarSize,
         child: CustomAppBar(
           scaffoldKey: PharmacistHomePage.scaffoldKey,
-          endIcon: FontAwesomeIcons.bell,
+          endIcon: FontAwesomeIcons.message,
           endIconAction: () {
             Navigator.pushNamed(context, PeopleScreen.routeName,
                 arguments: 'doctor');
@@ -115,11 +118,27 @@ class _PharmacistHomePageState extends State<PharmacistHomePage> {
                   width: 180.w,
                   child:
                       BlocBuilder<GetMyPharmaciesCubit, GetMyPharmaciesState>(
-                    builder: (context, state) {
+                    builder:
+                        (BuildContext context, GetMyPharmaciesState state) {
                       if (state is GetMyPharmaciesFailure) {
                         return Text(state.errMessage);
                       } else if (state is GetMyPharmaciesSuccsess) {
-                        // _dropdownValue = state.myPharmacies[0].pharmacyName;
+                        if (state.myPharmacies.isEmpty) {
+                          return Text(
+                            'No pharmacies yet',
+                            style: TextStyle(
+                              color: ThemeColors.kMainColor(context),
+                              fontSize: 14.sp,
+                            ),
+                          );
+                        }
+                        final List<String> pharmacyNames = state.myPharmacies
+                            .map((PharmacyModel pharmacy) =>
+                                pharmacy.pharmacyName)
+                            .toList();
+                        if (!pharmacyNames.contains(_dropdownValue)) {
+                          _dropdownValue = pharmacyNames.first;
+                        }
                         return DropdownButtonFormField<String>(
                           value: _dropdownValue,
                           isExpanded: true,
@@ -144,23 +163,24 @@ class _PharmacistHomePageState extends State<PharmacistHomePage> {
                                 vertical: 8.0, horizontal: 8.0),
                           ),
                           onChanged: (String? newValue) {
-                            _dropdownValue = newValue!;
-                            //Update the Choosen Pharmacy
-                            BlocProvider.of<GetMyPharmaciesCubit>(context)
-                                    .choosenPharmacy =
-                                state.myPharmacies.firstWhere((element) =>
-                                    element.pharmacyName == _dropdownValue);
-
-                            //Fetch Drugs in the choosen phamrmacy
-                            BlocProvider.of<GetShortageDrugCubit>(context)
-                                .getShortageDrugs(
-                                    pharmacyId:
-                                        BlocProvider.of<GetMyPharmaciesCubit>(
-                                                context)
-                                            .choosenPharmacy
-                                            .id);
-                            BlocProvider.of<FetchDrugsCubit>(context)
-                                .fetchDrugs();
+                            if (newValue != null) {
+                              _dropdownValue = newValue;
+                              BlocProvider.of<GetMyPharmaciesCubit>(context)
+                                      .choosenPharmacy =
+                                  state.myPharmacies.firstWhere(
+                                      (PharmacyModel element) =>
+                                          element.pharmacyName ==
+                                          _dropdownValue);
+                              BlocProvider.of<GetShortageDrugCubit>(context)
+                                  .getShortageDrugs(
+                                      pharmacyId:
+                                          BlocProvider.of<GetMyPharmaciesCubit>(
+                                                  context)
+                                              .choosenPharmacy
+                                              .id);
+                              BlocProvider.of<FetchDrugsCubit>(context)
+                                  .fetchDrugs();
+                            }
                           },
                           items: state.myPharmacies
                               .map<DropdownMenuItem<String>>(

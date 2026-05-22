@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmygo/core/utils/colors.dart';
 import 'package:pharmygo/core/utils/dimensions.dart';
 import 'package:pharmygo/public/models/drug_model.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
@@ -20,7 +21,7 @@ class DrugsList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: 14 ),
         child: Container(
           height: 180,
           width: 150,
@@ -53,6 +54,10 @@ class DrugsList extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+              ),
+              Text(
+                "${drugModel.price.toString()} EGP",
+                style: const TextStyle(fontSize: 18, color: kSecondColor),
               ),
             ],
           ),

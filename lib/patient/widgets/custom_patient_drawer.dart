@@ -88,11 +88,11 @@ class CustomPatientDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  CustomDrawerTile(
-                    title: "Orders history",
-                    icon: Icons.history,
-                    onTap: () {},
-                  ),
+                  // CustomDrawerTile(
+                  //   title: "Orders history",
+                  //   icon: Icons.history,
+                  //   onTap: () {},
+                  // ),
                   CustomDrawerTile(
                     title: "News",
                     icon: Icons.newspaper,

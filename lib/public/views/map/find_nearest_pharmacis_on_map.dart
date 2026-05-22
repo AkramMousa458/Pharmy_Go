@@ -1,5 +1,4 @@
 // ignore_for_file: unused_local_variable
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -18,7 +17,7 @@ import 'package:pharmygo/public/views/map/pharmacy_details_bottom_sheet.dart';
 
 class FindNearestPharmacisOnMap extends StatefulWidget {
   const FindNearestPharmacisOnMap({super.key});
-  static const routeName = '/FindNearestPharmacisOnMap';
+  static const String routeName = '/FindNearestPharmacisOnMap';
 
   @override
   State<FindNearestPharmacisOnMap> createState() =>
@@ -28,16 +27,20 @@ class FindNearestPharmacisOnMap extends StatefulWidget {
 class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
   late Marker targetMarker;
   late List<Marker> nearestMarker;
-  bool isButtonPressed = false, startTrip = false;
+  bool isButtonPressed = false;
   late List<NearestPharmacyModel> nearstPharmacies;
   late List<Marker> markerOfNearstPharmacies;
   int id = 0;
-  CameraPosition cameraPosition = const CameraPosition(
+  final CameraPosition cameraPosition = const CameraPosition(
     target: LatLng(30.560600, 31.010910),
     zoom: 12,
   );
   GoogleMapController? gmc;
   StreamSubscription<Position>? positionStream;
+  final Set<Marker> _showMarkers = <Marker>{};
+  Set<Polyline> _polylines = <Polyline>{};
+  String _distanceText = '';
+  String _durationText = '';
 
   @override
   void initState() {
@@ -47,10 +50,10 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
       position: LatLng(30.560600, 31.010910),
     );
     initializeStream();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
       nearstPharmacies =
           BlocProvider.of<GetNearstPharmaciesCubit>(context).nearstPharmacies;
-      markerOfNearstPharmacies = nearstPharmacies.map((phamacy) {
+      markerOfNearstPharmacies = nearstPharmacies.map((NearestPharmacyModel phamacy) {
         return Marker(
           markerId: MarkerId('${++id}'),
           infoWindow: InfoWindow(
@@ -60,7 +63,6 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
           onTap: () {
             pharmacyDetailsBottomSheet(
                 context: context,
-                // drug: drug,
                 nearestPharmacy: phamacy);
           },
         );
@@ -85,7 +87,6 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
       log('Service Location Not Enable');
       return;
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -94,7 +95,6 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
         return;
       }
     }
-
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
       positionStream =
@@ -119,33 +119,78 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
           position.longitude,
         ),
       );
-
       nearestMarker = findNearestMarkers(position.latitude, position.longitude);
-      showmarkers.add(targetMarker);
+      _showMarkers.add(targetMarker);
     });
-
     gmc?.animateCamera(
         CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
-
     if (isButtonPressed) {
-      showmarkers.removeWhere((marker) => marker.markerId.value != '1');
-      showmarkers.addAll(nearestMarker);
-      if (startTrip) {
-        displayRoute(
+      _showMarkers.removeWhere((Marker marker) => marker.markerId.value != '1');
+      _showMarkers.addAll(nearestMarker);
+      final bool isTripStarted = BlocProvider.of<TripCubit>(context).trip;
+      if (isTripStarted) {
+        _displayRoute(
           LatLng(position.latitude, position.longitude),
           LatLng(BlocProvider.of<TripCubit>(context).latitude,
               BlocProvider.of<TripCubit>(context).longitude),
-          setState,
         );
       }
     }
   }
 
+  List<Marker> findNearestMarkers(double latitude, double longitude) {
+    return markerOfNearstPharmacies
+        .where((Marker marker) => marker.markerId.value != '1')
+        .map((Marker marker) {
+      final double distance = Geolocator.distanceBetween(
+        latitude,
+        longitude,
+        marker.position.latitude,
+        marker.position.longitude,
+      );
+      return marker.copyWith(
+        iconParam:
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      );
+    }).toList();
+  }
+
+  Future<void> _displayRoute(LatLng start, LatLng end) async {
+    try {
+      final String url =
+          'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson';
+      final http.Response response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+        final List<dynamic> geometry = jsonResponse['routes'][0]['geometry']['coordinates'] as List<dynamic>;
+        final double distance = (jsonResponse['routes'][0]['distance'] as num).toDouble();
+        final double duration = (jsonResponse['routes'][0]['duration'] as num).toDouble();
+        final List<LatLng> polylinePoints = <LatLng>[];
+        for (final dynamic point in geometry) {
+          polylinePoints.add(LatLng((point as List<dynamic>)[1] as double, point[0] as double));
+        }
+        setState(() {
+          _polylines = <Polyline>{
+            Polyline(
+              polylineId: const PolylineId('route'),
+              points: polylinePoints,
+              color: Colors.blue,
+              width: 5,
+            ),
+          };
+          _distanceText = 'Distance: ${(distance / 1000).toStringAsFixed(2)} km';
+          _durationText = 'Duration: ${(duration / 60).toStringAsFixed(2)} mins';
+        });
+      } else {
+        throw Exception('Failed to load route');
+      }
+    } catch (e) {
+      log('Error fetching route: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      startTrip = BlocProvider.of<TripCubit>(context).trip;
-    });
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -175,11 +220,11 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
           GoogleMap(
             initialCameraPosition: cameraPosition,
             mapType: MapType.normal,
-            onMapCreated: (mapcontroller) {
+            onMapCreated: (GoogleMapController mapcontroller) {
               gmc = mapcontroller;
             },
-            markers: showmarkers.toSet(),
-            polylines: polylines,
+            markers: _showMarkers,
+            polylines: _polylines,
           ),
           Positioned(
             bottom: 0,
@@ -200,7 +245,7 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        distanceText,
+                        _distanceText,
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -212,7 +257,7 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        durationText,
+                        _durationText,
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -224,201 +269,8 @@ class _FindNearestPharmacisOnMapState extends State<FindNearestPharmacisOnMap> {
               ),
             ),
           ),
-          // Positioned(
-          //   top: MediaQuery.of(context).size.height / 1.3,
-          //   right: MediaQuery.of(context).size.width / 1.23,
-          //   child: FloatingActionButton(
-          //     onPressed: () async {
-          //       setState(() {
-          //         isButtonPressed = true;
-          //       });
-          //     },
-          //     shape: const CircleBorder(),
-          //     mini: true,
-          //     backgroundColor: Colors.black,
-          //     child: const Icon(
-          //       Icons.local_pharmacy_rounded,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: 0,
-          //   left: 100,
-          //   child: Container(
-          //     height: Dimensions.screenHeight(context) / 14,
-          //     width: Dimensions.screenWidth(context) / 2,
-          //     decoration: const BoxDecoration(
-          //         color: Colors.black,
-          //         borderRadius: BorderRadius.only(
-          //             topLeft: Radius.circular(10),
-          //             topRight: Radius.circular(10))),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.center,
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             Text(
-          //               distanceText,
-          //               style: const TextStyle(
-          //                   color: Colors.white,
-          //                   fontSize: 16,
-          //                   fontWeight: FontWeight.bold),
-          //             ),
-          //           ],
-          //         ),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             Text(
-          //               durationText,
-          //               style: const TextStyle(
-          //                   color: Colors.white,
-          //                   fontSize: 16,
-          //                   fontWeight: FontWeight.bold),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
   }
-
-  List<Marker> findNearestMarkers(double latitude, double longitude) {
-    return markerOfNearstPharmacies
-        .where((marker) => marker.markerId.value != '1')
-        .map((marker) {
-      double distance = Geolocator.distanceBetween(
-        latitude,
-        longitude,
-        marker.position.latitude,
-        marker.position.longitude,
-      );
-      return marker.copyWith(
-        iconParam:
-            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-      );
-    }).toList();
-  }
 }
-
-Set<Marker> showmarkers = {};
-Set<Polyline> polylines = {};
-String distanceText = '';
-String durationText = '';
-
-Future<List<LatLng>> getRoutePoints(LatLng start, LatLng end) async {
-  try {
-    String url =
-        'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      final geometry = jsonResponse['routes'][0]['geometry']['coordinates'];
-
-      List<LatLng> polylinePoints = [];
-      for (var point in geometry) {
-        polylinePoints.add(LatLng(point[1], point[0]));
-      }
-
-      return polylinePoints;
-    } else {
-      throw Exception('Failed to load route');
-    }
-  } catch (e) {
-    log('Error fetching route: $e');
-    throw Exception('Error fetching route');
-  }
-}
-
-Future<void> displayRoute(LatLng start, LatLng end, Function setState) async {
-  try {
-    String url =
-        'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      final geometry = jsonResponse['routes'][0]['geometry']['coordinates'];
-      final distance = jsonResponse['routes'][0]['distance'];
-      final duration = jsonResponse['routes'][0]['duration'];
-
-      List<LatLng> polylinePoints = [];
-      for (var point in geometry) {
-        polylinePoints.add(LatLng(point[1], point[0]));
-      }
-
-      setState(() {
-        polylines = {
-          Polyline(
-            polylineId: const PolylineId('route'),
-            points: polylinePoints,
-            color: Colors.blue,
-            width: 5,
-          ),
-        };
-        distanceText = 'Distance: ${(distance / 1000).toStringAsFixed(2)} km';
-        durationText = 'Duration: ${(duration / 60).toStringAsFixed(2)} mins';
-      });
-    } else {
-      throw Exception('Failed to load route');
-    }
-  } catch (e) {
-    log('Error fetching route: $e');
-  }
-}
-// Future<void> displayRoute(
-//     LatLng start, List<Marker> end, Function setState) async {
-//   try {
-//     List<Future<http.Response>> responseFutures = [];
-//     List<String> urls = end.map((end) {
-//       return 'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.position.longitude},${end.position.latitude}?overview=full&geometries=geojson';
-//     }).toList();
-
-//     for (var url in urls) {
-//       responseFutures.add(http.get(Uri.parse(url)));
-//     }
-
-//     List<http.Response> responses = await Future.wait(responseFutures);
-
-//     for (var response in responses) {
-//       if (response.statusCode == 200) {
-//         final jsonResponse = jsonDecode(response.body);
-//         final geometry = jsonResponse['routes'][0]['geometry']['coordinates'];
-//         final distance = jsonResponse['routes'][0]['distance'];
-//         final duration = jsonResponse['routes'][0]['duration'];
-
-//         List<LatLng> polylinePoints = [];
-//         for (var point in geometry) {
-//           polylinePoints.add(LatLng(point[1], point[0]));
-//         }
-
-//         setState(() {
-//           polylines = {
-//             Polyline(
-//               polylineId: const PolylineId('route'),
-//               points: polylinePoints,
-//               color: Colors.blue,
-//               width: 5,
-//             ),
-//           };
-//           distanceText = 'Distance: ${(distance / 1000).toStringAsFixed(2)} km';
-//           durationText = 'Duration: ${(duration / 60).toStringAsFixed(2)} mins';
-//         });
-//       } else {
-//         log('Request failed with status: ${response.statusCode}');
-//       }
-//     }
-//   } catch (e) {
-//     log('Error fetching route: $e');
-//   }
-// }

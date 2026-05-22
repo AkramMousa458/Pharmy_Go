@@ -24,7 +24,7 @@ class CustomCircleButton extends StatelessWidget {
       iconSize: iconSize,
       onPressed: onPressed,
       icon: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: backgroundColor,

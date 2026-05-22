@@ -30,13 +30,14 @@ import 'package:permission_handler/permission_handler.dart';
 class PatientHomePage extends StatefulWidget {
   const PatientHomePage({super.key});
   static const String routeName = "/homepagepatient";
-  static final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   State<PatientHomePage> createState() => _PatientHomePageState();
 }
 
 class _PatientHomePageState extends State<PatientHomePage> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     requestLocationPermission();
@@ -47,15 +48,11 @@ class _PatientHomePageState extends State<PatientHomePage> {
     log('open');
     var status = await Permission.location.status;
     if (status.isDenied) {
-      // We didn't ask for permission yet or the permission has been denied before but not permanently.
       if (await Permission.location.request().isGranted) {
-        // Either the permission was already granted before or the user just granted it.
         log('Location permission granted');
       }
     } else if (status.isPermanentlyDenied) {
       log('isPermanentlyDenied');
-      // The user opted to never again see the permission request dialog for this app.
-      // The only way to change the permission now is to let the user manually enable it in the system settings.
       openAppSettings();
     }
   }
@@ -64,19 +61,19 @@ class _PatientHomePageState extends State<PatientHomePage> {
   Widget build(BuildContext context) {
     FocusScope.of(context).unfocus();
     return BlocProvider(
-      create: (context) =>
+      create: (BuildContext context) =>
           UpdatePatientLocationCubit(PatientsRepoImpl(ApiService(Dio())))
             ..updatePatientLocation(longitude: '', latitude: ''),
       child: Scaffold(
         backgroundColor: ThemeColors.kBackgroundColor(context),
-        key: PatientHomePage.scaffoldKey,
+        key: scaffoldKey,
         drawer: const Drawer(
           child: CustomPatientDrawer(),
         ),
         appBar: PreferredSize(
           preferredSize: appBarSize,
           child: CustomAppBar(
-            scaffoldKey: PatientHomePage.scaffoldKey,
+            scaffoldKey: scaffoldKey,
           ),
         ),
         body: SingleChildScrollView(
@@ -123,13 +120,13 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         //     );
                         //   },
                         // ),
-                        OptionListItem(
-                          onTap: () {
-                            // Navigator.pushNamed(context, AlarmPage.routeName);
-                          },
-                          icon: alarmIcon,
-                          title: "Alarm",
-                        ),
+                        // OptionListItem(
+                        //   onTap: () {
+                        //     // Navigator.pushNamed(context, AlarmPage.routeName);
+                        //   },
+                        //   icon: alarmIcon,
+                        //   title: "Alarm",
+                        // ),
                         OptionListItem(
                           onTap: () {
                             Navigator.pushNamed(context, PeopleScreen.routeName,
@@ -246,6 +243,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     }
                   },
                 ),
+                SizedBox(height: 25.h),
               ],
             ),
           ),
