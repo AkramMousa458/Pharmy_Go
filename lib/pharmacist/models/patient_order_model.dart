@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class PatientOrderModel {
   final int id;
   final String name;
@@ -7,21 +9,22 @@ class PatientOrderModel {
   final String imageUrl;
 
   PatientOrderModel(
-      {
-      required this.id,
+      {required this.id,
       required this.name,
       required this.email,
       required this.address,
       required this.phone,
       required this.imageUrl});
 
-  factory PatientOrderModel.fromJson(Map<String, dynamic> json) =>
-      PatientOrderModel(
-        id: json['id'] ?? 0,
-        name: json['name'] ?? "",
-        email: json['email'] ?? "",
-        address: json['address'] ?? "",
-        phone: json['phone'] ?? "",
-        imageUrl: json['image_url'] ?? "",
-      );
+  factory PatientOrderModel.fromJson(Map<String, dynamic> json) {
+    log(" PatientOrderModel json : $json");
+    return PatientOrderModel(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? "",
+      email: json['email'] ?? "",
+      address: json['address'] ?? "",
+      phone: json['phone'] ?? "",
+      imageUrl: json['image_url'] ?? "",
+    );
+  }
 }
