@@ -6,7 +6,8 @@ part 'delete_order_state.dart';
 class DeleteOrderCubit extends Cubit<DeleteOrderState> {
   DeleteOrderCubit(this.pharmacistRepo) : super(DeleteOrderInitial());
   final PharmacistRepo pharmacistRepo;
-  Future<void> deleteMedicine( {required int patientId, required int orderId}) async {
+  Future<void> deleteOrder(
+      {required int patientId, required int orderId}) async {
     emit(DeleteOrderLoading());
     var result = await pharmacistRepo.deleteOrder(
         patientId: patientId, orderId: orderId);

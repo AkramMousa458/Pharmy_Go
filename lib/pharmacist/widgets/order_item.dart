@@ -31,7 +31,9 @@ class OrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(pharmacyOrderModel.patient.imageUrl);
+    log(' imageUrl ${pharmacyOrderModel.patient.imageUrl}');
+    log('phone  ${pharmacyOrderModel.patient.phone}');
+    log('address ${pharmacyOrderModel.patient.address}');
     bool isDeleteLoading = false;
     return BlocProvider(
       create: (context) =>
@@ -96,9 +98,12 @@ class OrderItem extends StatelessWidget {
                               size: 12.sp,
                               color: ThemeColors.kMainColor(context),
                             ),
+                            SizedBox(width: 3.w),
                             Expanded(
                               child: Text(
-                                pharmacyOrderModel.patient.address,
+                                pharmacyOrderModel.patient.address.isNotEmpty
+                                    ? pharmacyOrderModel.patient.address
+                                    : 'Egypt, Shepin',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -147,7 +152,7 @@ class OrderItem extends StatelessWidget {
                                   for (var element
                                       in pharmacyOrderModel.orders) {
                                     BlocProvider.of<DeleteOrderCubit>(context)
-                                        .deleteMedicine(
+                                        .deleteOrder(
                                             patientId:
                                                 pharmacyOrderModel.patient.id,
                                             orderId: element.id);
@@ -185,9 +190,11 @@ class OrderItem extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: CustomButton(
                 onPressed: () {
-                  // Navigator.pushNamed(
-                  //     context, PatientProfileEditPage.routeName,
-                  //     arguments: state.patient);
+                  for (var element in pharmacyOrderModel.orders) {
+                    BlocProvider.of<DeleteOrderCubit>(context).deleteOrder(
+                        patientId: pharmacyOrderModel.patient.id,
+                        orderId: element.id);
+                  }
                 },
                 text: 'Confirm Order',
                 textSize: 14.sp,
