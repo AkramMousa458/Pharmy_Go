@@ -38,25 +38,19 @@ class ApiService {
   // Asynchronous function to make a POST request to the API
   Future<Map<String, dynamic>> post(
       {required String endPoint, required dynamic data}) async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // if (prefs.getString('auth-token') == null) {
-    //   prefs.setString('auth-token', '');
-    // }
-    // token = prefs.getString('auth-token');
-
-    // Send a POST request to the specified endPoint by combining it with the base URL
-    var response = await _dio.post(
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('auth-token') == null) {
+      prefs.setString('auth-token', '');
+    }
+    token = prefs.getString('auth-token');
+    final Response<dynamic> response = await _dio.post(
       '$_baseUrl$endPoint',
       data: data,
-      // options: Options(
-      //   headers: {"Content-Type": "application/json"},
-      // validateStatus: (status) {
-      //   return status! < 500; // Accept status codes less than 500
-      // },
-      // ),
+      options: Options(headers: {
+        if (data is! FormData) 'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      }),
     );
-
-    // Return the response data as a map (dynamic) containing key-value pairs
     return response.data;
   }
 

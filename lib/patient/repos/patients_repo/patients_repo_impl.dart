@@ -2,7 +2,6 @@
 
 // ignore_for_file: avoid_log
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -187,41 +186,30 @@ class PatientsRepoImpl implements PatientsRepo {
       required int drugId,
       required int quantity}) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt("id") ?? 0;
-
-      log(
-          '============================userID: $id============================');
-      final body = jsonEncode({
-        'items': [
-          {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int id = prefs.getInt("id") ?? 0;
+      log('============================userID: $id============================');
+      final Map<String, dynamic> body = <String, dynamic>{
+        'items': <Map<String, dynamic>>[
+          <String, dynamic>{
             'drug_id': drugId,
             'quantity': quantity,
           }
         ],
-      });
-      // Send the request
-      var response = await apiService.post(
+      };
+      final Map<String, dynamic> response = await apiService.post(
           endPoint:
               'home/patient/dashboard/storeCart/patient/$id/pharmacy/$pharmacyId',
           data: body);
-
-      // log the response for debugging
       log('Response: $response');
-
-      // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
-        // Parse the list of pharmacies
-        String result = response['message'];
-
+        final String result = response['message'] as String;
         return right(result);
       } else {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // log the error for debugging
       log('Error: $e');
-
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
       }
@@ -272,41 +260,30 @@ class PatientsRepoImpl implements PatientsRepo {
       required int drugId,
       required int quantity}) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt("id") ?? 0;
-
-      log(
-          '============================userID: $id, DrugID:============================');
-      final body = jsonEncode({
-        'items': [
-          {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int id = prefs.getInt("id") ?? 0;
+      log('============================userID: $id, DrugID:============================');
+      final Map<String, dynamic> body = <String, dynamic>{
+        'items': <Map<String, dynamic>>[
+          <String, dynamic>{
             'drug_id': drugId,
             'quantity': quantity,
           }
         ],
-      });
-      // Send the request
-      var response = await apiService.post(
+      };
+      final Map<String, dynamic> response = await apiService.post(
           endPoint:
               'home/patient/dashboard/storeOrder/patient/$id/pharmacy/$pharmacyId',
           data: body);
-
-      // log the response for debugging
       log('Response: $response');
-
-      // Ensure the response is a map and contains the 'message' key
       if (response.containsKey('message')) {
-        // Parse the list of pharmacies
-        String result = response['message'];
-
+        final String result = response['message'] as String;
         return right(result);
       } else {
         return left(ServerFailure('Unexpected response format'));
       }
     } catch (e) {
-      // log the error for debugging
       log('Error: $e');
-
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
       }

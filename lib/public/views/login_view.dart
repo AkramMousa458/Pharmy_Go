@@ -14,7 +14,6 @@ import 'package:pharmygo/public/views/forget_password_view.dart';
 import 'package:pharmygo/public/views/signup_view.dart';
 import 'package:pharmygo/public/widgets/custom_button.dart';
 import 'package:pharmygo/public/widgets/custom_checkbox.dart';
-import 'package:pharmygo/public/widgets/google_button.dart';
 import 'package:pharmygo/public/widgets/login_text_field.dart';
 import 'package:pharmygo/core/theme/theme_colors.dart';
 
