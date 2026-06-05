@@ -15,7 +15,7 @@ class NewsService {
     try {
       Response res = await dio.get(
           "https://newsapi.org/v2/everything?q=health&language=ar&sortBy=publishedAt&apiKey=$apiKey");
-      log('res:${res.data}');
+      // log('res:${res.data}');
       Map<String, dynamic> jsonData = res.data;
       List<dynamic> articles = jsonData['articles'];
       List<ArticleModel> articlesList = [];
