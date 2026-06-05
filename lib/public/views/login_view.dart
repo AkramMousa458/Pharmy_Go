@@ -6,7 +6,9 @@ import 'package:pharmygo/core/utils/assets.dart';
 import 'package:pharmygo/core/utils/dimensions.dart';
 import 'package:pharmygo/core/helper/show_snack_bar.dart';
 import 'package:pharmygo/core/utils/icons.dart';
+import 'package:pharmygo/patient/cubits/patient_cubit/patient_cubit.dart';
 import 'package:pharmygo/patient/views/navigation_bar_transition_patient_for_home_page.dart';
+import 'package:pharmygo/pharmacist/cubits/pharmacist_cubit/pharmacist_cubit.dart';
 import 'package:pharmygo/pharmacist/views/navigation_bar_transition_pharmacy_for_home_page.dart';
 import 'package:pharmygo/public/cubits/auth_cubit/auth_cubit.dart';
 import 'package:pharmygo/public/cubits/select_type_cubit/select_type_cubit.dart';
@@ -203,6 +205,7 @@ class LoginView extends StatelessWidget {
                               showSnackBar(context, state.errMessage);
                             } else if (state is AuthSuccess) {
                               if (isPatient) {
+                                context.read<PatientCubit>().getPatient();
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   NavigationBarTransitionPatientForHomePage
@@ -210,6 +213,7 @@ class LoginView extends StatelessWidget {
                                   (route) => false,
                                 );
                               } else if (isPharmacy) {
+                                context.read<PharmacistCubit>().getPharmaicst();
                                 Navigator.pushReplacementNamed(
                                     context,
                                     NavigationBarTransitionPharmacyForHomePage

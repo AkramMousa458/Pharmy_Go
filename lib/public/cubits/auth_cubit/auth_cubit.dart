@@ -33,8 +33,45 @@ class AuthCubit extends Cubit<AuthState> {
       _id = authModel.id;
       prefs.setInt('auth-id', _id);
       prefs.setString('type', userType);
+      _syncChatProfile(
+        userType: userType,
+        email: authModel.email,
+        name: authModel.name,
+        phone: authModel.phone,
+      );
       emit(AuthSuccess());
     });
+  }
+
+  Future<void> _syncChatProfile({
+    required String userType,
+    required String email,
+    required String name,
+    required String phone,
+  }) async {
+    if (email.isEmpty) return;
+
+    final collectionName = userType == 'patient'
+        ? kPatientsCollection
+        : kPharmacistesCollection;
+    final collection =
+        FirebaseFirestore.instance.collection(collectionName);
+    final existing =
+        await collection.where(kEmail, isEqualTo: email).limit(1).get();
+
+    final profile = {
+      kEmail: email,
+      kName: name,
+      kphone: phone,
+      photoConst:
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+    };
+
+    if (existing.docs.isEmpty) {
+      await collection.add(profile);
+    } else {
+      await existing.docs.first.reference.update(profile);
+    }
   }
 
   Future<void> signupPatient({

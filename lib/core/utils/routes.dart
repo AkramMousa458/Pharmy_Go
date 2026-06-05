@@ -104,7 +104,7 @@ var routes = {
       const FindNearestPharmacisOnMap(),
   DonationView.routeName: (context) => const DonationView(),
   PeopleScreen.routeName: (context) =>  const PeopleScreen(),
-  ChatScreen.routeName: (context) => ChatScreen(),
+  ChatScreen.routeName: (context) => const ChatScreen(),
   NewsView.routeName: (context) => const NewsView(),
   OcrPage.routeName: (context) => const OcrPage(),
 };
