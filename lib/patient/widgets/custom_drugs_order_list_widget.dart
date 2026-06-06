@@ -246,14 +246,21 @@ class CustomDrugsOrderListWidget extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: BlocBuilder<GetNearstPharmciesWithDrugCubit,
+          child: BlocConsumer<GetNearstPharmciesWithDrugCubit,
               GetNearstPharmciesWithDrugState>(
-            builder: (context, state) {
+            listener: (context, state) {
               if (state is GetNearstPharmciesWithDrugFailure) {
                 showSnackBar(context, state.errMessage);
+              }
+            },
+            builder: (context, state) {
+              if (state is GetNearstPharmciesWithDrugFailure) {
                 return const SizedBox();
               } else if (state is GetNearstPharmciesWithDrugSuccsess) {
-                log("success state.nearstPharmacies ${state.nearstPharmacies}");
+                for (var element in state.nearstPharmacies) {
+                  log("nearstPharmacies element.distance ${element.toJson()}");
+                }
+                // log("success state.nearstPharmacies ${state.nearstPharmacies.toList()}");
                 return state.nearstPharmacies.isEmpty
                     ? Center(
                         child: Text(

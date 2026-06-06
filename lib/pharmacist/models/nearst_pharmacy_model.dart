@@ -21,7 +21,6 @@ class NearestPharmacyModel {
 
   factory NearestPharmacyModel.fromJson(Map<String, dynamic> json) {
     return NearestPharmacyModel(
-
       id: json['pharmacy_id'] ?? 0,
       pharmacist: json['pharmacist'] ?? "",
       pharmacyName: json['name'] ?? "",
@@ -33,7 +32,27 @@ class NearestPharmacyModel {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'pharmacy_id': id,
+      'pharmacist': pharmacist,
+      'name': pharmacyName,
+      'longitude': longitude,
+      'latitude': latitude,
+      'distance': distance,
+      'delivery': delivery,
+      'quantity': quantity,
+    };
+  }
+
   static List<NearestPharmacyModel> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => NearestPharmacyModel.fromJson(json)).toList();
+    return jsonList
+        .map((json) => NearestPharmacyModel.fromJson(json))
+        .toList();
+  }
+
+  static List<Map<String, dynamic>> toJsonList(
+      List<NearestPharmacyModel> list) {
+    return list.map((item) => item.toJson()).toList();
   }
 }

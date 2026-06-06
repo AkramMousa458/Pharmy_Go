@@ -221,15 +221,15 @@ Future<dynamic> optionBuyBottomSheet(
                             );
                           },
                         ),
-                        // SizedBox(
-                        //   height: 6.h,
-                        // ),
-                        // CustomButton(
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //   },
-                        //   text: "Start Trip",
-                        // ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        CustomButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          text: "Start Trip",
+                        ),
                       ],
                     )
                   : Column(

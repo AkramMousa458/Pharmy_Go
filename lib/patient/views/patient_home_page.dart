@@ -9,6 +9,7 @@ import 'package:pharmygo/core/utils/api_services.dart';
 import 'package:pharmygo/core/utils/constants.dart';
 import 'package:pharmygo/core/utils/dimensions.dart';
 import 'package:pharmygo/core/utils/icons.dart';
+import 'package:pharmygo/patient/cubits/get_nearst_pharmacies/get_nearst_pharmacies_cubit.dart';
 import 'package:pharmygo/patient/cubits/update_patient_location/update_patient_location_cubit.dart';
 import 'package:pharmygo/patient/repos/patients_repo/patients_repo_impl.dart';
 import 'package:pharmygo/patient/views/patient_drug_view.dart';
@@ -20,6 +21,7 @@ import 'package:pharmygo/patient/widgets/shimmer_home_page_patient.dart';
 import 'package:pharmygo/patient/widgets/custom_slider.dart';
 import 'package:pharmygo/patient/widgets/drugs_list.dart';
 import 'package:pharmygo/patient/widgets/option_list.dart';
+import 'package:pharmygo/public/views/map/find_nearest_pharmacis_on_map.dart';
 import 'package:pharmygo/public/views/ocr_page.dart';
 import 'package:pharmygo/public/widgets/custom_app_bar.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
@@ -100,26 +102,26 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        // BlocConsumer<GetNearstPharmaciesCubit,
-                        //     GetNearstPharmaciesState>(
-                        //   listener: (context, state) {
-                        //     if (state is GetNearstPharmaciesSuccsess) {
-                        //       Navigator.pushNamed(
-                        //           context, FindNearestPharmacisOnMap.routeName);
-                        //     }
-                        //   },
-                        //   builder: (context, state) {
-                        //     return OptionListItem(
-                        //       onTap: () async {
-                        //         BlocProvider.of<GetNearstPharmaciesCubit>(
-                        //                 context)
-                        //             .getNearstPharmacies();
-                        //       },
-                        //       icon: pharmacyIcon,
-                        //       title: "Pharmacy",
-                        //     );
-                        //   },
-                        // ),
+                        BlocConsumer<GetNearstPharmaciesCubit,
+                            GetNearstPharmaciesState>(
+                          listener: (context, state) {
+                            if (state is GetNearstPharmaciesSuccsess) {
+                              Navigator.pushNamed(
+                                  context, FindNearestPharmacisOnMap.routeName);
+                            }
+                          },
+                          builder: (context, state) {
+                            return OptionListItem(
+                              onTap: () async {
+                                BlocProvider.of<GetNearstPharmaciesCubit>(
+                                        context)
+                                    .getNearstPharmacies();
+                              },
+                              icon: pharmacyIcon,
+                              title: "Pharmacy",
+                            );
+                          },
+                        ),
                         // OptionListItem(
                         //   onTap: () {
                         //     // Navigator.pushNamed(context, AlarmPage.routeName);
