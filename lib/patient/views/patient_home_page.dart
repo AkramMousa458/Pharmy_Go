@@ -12,6 +12,7 @@ import 'package:pharmygo/core/utils/icons.dart';
 import 'package:pharmygo/patient/cubits/get_nearst_pharmacies/get_nearst_pharmacies_cubit.dart';
 import 'package:pharmygo/patient/cubits/update_patient_location/update_patient_location_cubit.dart';
 import 'package:pharmygo/patient/repos/patients_repo/patients_repo_impl.dart';
+import 'package:pharmygo/core/utils/ocr_search_utils.dart';
 import 'package:pharmygo/patient/views/patient_drug_view.dart';
 import 'package:pharmygo/patient/views/people_screen.dart';
 import 'package:pharmygo/public/cubits/fetch_drugs_cubit/fetch_drugs_cubit.dart';
@@ -22,7 +23,6 @@ import 'package:pharmygo/patient/widgets/custom_slider.dart';
 import 'package:pharmygo/patient/widgets/drugs_list.dart';
 import 'package:pharmygo/patient/widgets/option_list.dart';
 import 'package:pharmygo/public/views/map/find_nearest_pharmacis_on_map.dart';
-import 'package:pharmygo/public/views/ocr_page.dart';
 import 'package:pharmygo/public/widgets/custom_app_bar.dart';
 import 'package:pharmygo/public/widgets/custom_loading_indicator.dart';
 import 'package:pharmygo/public/widgets/custom_search.dart';
@@ -87,11 +87,9 @@ class _PatientHomePageState extends State<PatientHomePage> {
                   width: Dimensions.screenWidth(context) - 50,
                   startIcon: searchIcon,
                   endIcon: cameraIcon,
-                  onTapEndIcon: () {
-                    Navigator.pushNamed(context, OcrPage.routeName);
-                  },
+                  onTapEndIcon: () => openOcrThenSearch(context),
                   onTap: () {
-                    showSearch(context: context, delegate: CustomSearch());
+                    showDrugSearch(context);
                   },
                 ),
                 SizedBox(height: 4.h),
